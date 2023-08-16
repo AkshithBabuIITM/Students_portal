@@ -1,0 +1,178 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // public details
+  rollNo    String  @unique
+  name      String
+  gender    Gender
+  bio       String?
+  photoURL  String?
+  programme String? // Btech/Mtech/Phd?DD etc
+
+  // protected details
+  phoneNumber String?
+  dateOfBirth DateTime?
+  bloodGroup  String?
+
+  hostelAccomodation HostelAccomodation[]
+  messAllocation     MessAllocation[]
+  teamMemberships    TeamMembership[]
+  // profile StudentProfile?
+  // Feedback           Feedback[]
+}
+
+model Hostel {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  slug     String  @unique
+  name     String
+  location String
+  photoURL String?
+
+  accomodations HostelAccomodation[]
+
+}
+
+model HostelAccomodation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roomNo   String
+  fromDate DateTime?
+  toDate   DateTime?
+
+  resident   Student @relation(fields: [residentId], references: [id])
+  residentId Int
+
+  hostel   Hostel @relation(fields: [hostelId], references: [id])
+  hostelId Int
+
+  @@unique([residentId, hostelId, roomNo, fromDate, toDate])
+}
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  slug     String  @unique
+  name     String
+  email    String
+  bio      String?
+  photoURL String?
+
+  memberships TeamMembership[]
+
+}
+
+model TeamMembership {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  role     String
+  fromDate DateTime?
+  toDate   DateTime?
+
+  member   Student @relation(fields: [memberId], references: [id])
+  memberId Int
+
+  team   Team @relation(fields: [teamId], references: [id])
+  teamId Int
+
+  @@unique([role, teamId, memberId])
+}
+
+model Mess {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  name     String
+  location String // Building + floor + side (left/right)
+  menu     Json
+
+  allocations MessAllocation[]
+
+}
+
+model MessAllocation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fromDate DateTime?
+  toDate   DateTime?
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  mess   Mess @relation(fields: [messId], references: [id])
+  messId Int
+
+  @@unique([studentId, messId, fromDate, toDate])
+}
+
+// model Venue {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   name     String
+//   location String
+
+//   // bookings
+//   // events
+// }
+
+// model Upload {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+
+//   data Bytes
+// }
+
+// model Feedback {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   content   String
+//   upvotes   Int
+//   downvotes Int
+//   attachments Upload[] //
+
+//   provider   Student @relation(fields: [providerId], references: [id])
+//   providerId Int
+// }
+
+// model Events {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+// }

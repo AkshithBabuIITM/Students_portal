@@ -1,0 +1,19 @@
+ Hostel_id | Hostel_Name |
++-----------+-------------+
+|         1 | Alakananda  |
+|         2 | Brahmaputra |
+|         3 | Cauvery     |
+|         4 | Ganga       |
+|         5 | Godavari    |
+|         6 | Jamuna      |
+|         7 | Krishna     |
+|         8 | Mahanadi    |
+|         9 | Mandakini   |
+|        10 | Narmada     |
+|        11 | Pampa       |
+|        12 | Saraswathi  |
+|        13 | Sarayu      |
+|        14 | Sharavathi  |
+|        15 | Sindhu      |
+|        16 | Tamirapani  |
+|        17 | Tapti       |
